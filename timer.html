@@ -134,48 +134,50 @@
     </div>
 
     <script>
-        // Get the 'data' parameter from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const timerData = urlParams.get('data');
+        (function() {
+            // Get the 'data' parameter from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const timerData = urlParams.get('data');
 
-        if (!timerData) {
-            // No data parameter, show error or redirect to main page
-            document.getElementById('manual-open').style.display = 'block';
-            document.querySelector('.message').textContent = 'No timer data found.';
-            document.getElementById('open-app-btn').style.display = 'none';
-            return;
-        }
+            if (!timerData) {
+                // No data parameter, show error or redirect to main page
+                document.getElementById('manual-open').style.display = 'block';
+                document.querySelector('.message').textContent = 'No timer data found.';
+                document.getElementById('open-app-btn').style.display = 'none';
+                return;
+            }
 
-        // Build the custom scheme deep link
-        const appLink = `ultimate-timer://timer/import?data=${encodeURIComponent(timerData)}`;
+            // Build the custom scheme deep link
+            const appLink = `ultimate-timer://timer/import?data=${encodeURIComponent(timerData)}`;
 
-        // Detect if user is on mobile
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            // Detect if user is on mobile
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-        if (isMobile) {
-            // On mobile: Try automatic redirect
-            document.getElementById('auto-redirect').style.display = 'block';
-            document.getElementById('manual-link').href = appLink;
+            if (isMobile) {
+                // On mobile: Try automatic redirect
+                document.getElementById('auto-redirect').style.display = 'block';
+                document.getElementById('manual-link').href = appLink;
 
-            // Attempt automatic redirect after a short delay
-            setTimeout(() => {
-                window.location.href = appLink;
-            }, 500);
+                // Attempt automatic redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = appLink;
+                }, 500);
 
-            // Fallback: If still on the page after 3 seconds, assume app not installed
-            setTimeout(() => {
-                const stillHere = !document.hidden;
-                if (stillHere) {
-                    document.getElementById('auto-redirect').style.display = 'none';
-                    document.getElementById('manual-open').style.display = 'block';
-                    document.getElementById('open-app-btn').href = appLink;
-                }
-            }, 3000);
-        } else {
-            // On desktop: Show manual open option
-            document.getElementById('manual-open').style.display = 'block';
-            document.getElementById('open-app-btn').href = appLink;
-        }
+                // Fallback: If still on the page after 3 seconds, assume app not installed
+                setTimeout(() => {
+                    const stillHere = !document.hidden;
+                    if (stillHere) {
+                        document.getElementById('auto-redirect').style.display = 'none';
+                        document.getElementById('manual-open').style.display = 'block';
+                        document.getElementById('open-app-btn').href = appLink;
+                    }
+                }, 3000);
+            } else {
+                // On desktop: Show manual open option
+                document.getElementById('manual-open').style.display = 'block';
+                document.getElementById('open-app-btn').href = appLink;
+            }
+        })();
     </script>
 </body>
 </html>
